@@ -10,12 +10,12 @@ public interface MeetingRoomService {
 	public void createRoom(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 	public List<MeetingRoomsEntity> getRoomDetails();
-
+									
 	public void registerMeetingRoom(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
-	public List<Object> findByDate(MeetingRoomRequestPojo meetingRoomRequestPojo);
+	//public List<Object> findByDate(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
-	public void findByRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo);
+	public MeetingRoomsEntity findByRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 	public void updateNoOfMembers(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
@@ -24,5 +24,11 @@ public interface MeetingRoomService {
 	public List<RegisterMeetingEntity> findMeetingBookedRoom();
 
 	public Iterable<RegisterMeetingEntity> findCancelMeeting(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	public List<RegisterMeetingEntity> findByDateAndRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	public List<RegisterMeetingEntity> findByTtsId(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	public Object findAvailability(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 }

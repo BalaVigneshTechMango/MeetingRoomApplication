@@ -1,5 +1,7 @@
 package com.meeting.room.response;
 
+import java.util.List;
+
 public class MeetingRoomResponsePojo {
 
 	private String message;

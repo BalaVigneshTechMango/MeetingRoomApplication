@@ -2,7 +2,6 @@ package com.meeting.room.entity;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +46,18 @@ public class RegisterMeetingEntity {
 	private Boolean deleted =Boolean.FALSE;
 	@Column(name = "slot_id")
 	private String slotId;
+	@Column(name = "booking_status")
+	private String bookingStatus;
 	
+
+	public String getBookingStatus() {
+		return bookingStatus;
+	}
+
+	public void setBookingStatus(String bookingStatus) {
+		this.bookingStatus = bookingStatus;
+	}
+
 	public String getSlotId() {
 		return slotId;
 	}

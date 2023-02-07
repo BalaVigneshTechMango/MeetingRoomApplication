@@ -10,13 +10,13 @@ public interface MeetingRoomDao {
 
 	List<MeetingRoomsEntity> getRoomDetails();
 
-	void createRoom(MeetingRoomsEntity meetingRoomEntity);
+	void createRoom(MeetingRoomRequestPojo meetingRoomRequestPojo);
 	
-	void registerMeetingRoom(RegisterMeetingEntity registerMeetingEntity);
+	void registerMeetingRoom(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
-	List<Object>  findByDate(MeetingRoomRequestPojo meetingRoomRequestPojo);
+	//List<Object> findByDate(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
-	void findByRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo);
+	public MeetingRoomsEntity findByRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 	void updateNoOfMembes(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
@@ -25,5 +25,13 @@ public interface MeetingRoomDao {
 	List<RegisterMeetingEntity> findMeetingBookedRoom();
 
 	Iterable<RegisterMeetingEntity> findCancelMeeting(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	public List<RegisterMeetingEntity> findByDateAndRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	void updateStatus(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	List<RegisterMeetingEntity> findByTtsId(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	List<RegisterMeetingEntity> findAvailability(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 }

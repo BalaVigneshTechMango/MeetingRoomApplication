@@ -1,14 +1,11 @@
 package com.meeting.room.service.impl;
 
-import java.sql.Date;
 import java.sql.Time;
-import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.meeting.room.dao.MeetingRoomDao;
 import com.meeting.room.entity.MeetingRoomsEntity;
 import com.meeting.room.entity.RegisterMeetingEntity;
@@ -25,21 +22,14 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 	private MeetingRoomDao meetingRoomDao;
 	@Autowired
 	private RegisterMeetingRepository registerMeetingRepository;
-	
+
+
 	@Override
 	public void createRoom(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-		MeetingRoomsEntity meetingRoomEntity = new MeetingRoomsEntity();
 		String id = meetingRoomRepository.getRoomId(meetingRoomRequestPojo.getBlock());
-		meetingRoomEntity.setRoomId(id);
-		meetingRoomEntity.setBlock(meetingRoomRequestPojo.getBlock());
-		meetingRoomEntity.setFloor(meetingRoomRequestPojo.getFloor());
-		meetingRoomEntity.setWhiteBoard(meetingRoomRequestPojo.getWhiteBoard());
-		meetingRoomEntity.setMemberCapacity(meetingRoomRequestPojo.getMemberCapacity());
-		meetingRoomEntity.setProjector(meetingRoomRequestPojo.getProjector());
-		meetingRoomEntity.setTelevision(meetingRoomRequestPojo.getTelevision());
-		meetingRoomEntity.setWebcamera(meetingRoomRequestPojo.getWebcamera());
-		meetingRoomEntity.setAcAvailability(meetingRoomRequestPojo.getAcAvailability());
-		meetingRoomDao.createRoom(meetingRoomEntity);
+		meetingRoomRequestPojo.setRoomId(id);
+		 meetingRoomDao.createRoom(meetingRoomRequestPojo);
+		
 	}
 
 	@Override
@@ -49,52 +39,56 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 
 	@Override
 	public void registerMeetingRoom(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-		//Date date=registerMeetingRepository.findByMeetingDate(meetingRoomRequestPojo.getMeetingDate());
+		Time startTime = meetingRoomRequestPojo.getMeetingStartTime();
+		Time endTime = meetingRoomRequestPojo.getMeetingEndTime();
+		List<RegisterMeetingEntity> date = registerMeetingRepository
+				.findByMeetingDate(meetingRoomRequestPojo.getMeetingDate());
 		
-		
-		 Instant start = Instant.now();
-		 // time passes      
-		 Instant end = Instant.now();
-		 Duration timeElapsed = Duration.between(start, end); 
-		
-		RegisterMeetingEntity registerMeetingEntity=new RegisterMeetingEntity();
-		registerMeetingEntity.setRoomId(meetingRoomRequestPojo.getRoomId());
-		registerMeetingEntity.setMeetingDate(meetingRoomRequestPojo.getMeetingDate());
-		registerMeetingEntity.setMeetingStartTime(meetingRoomRequestPojo.getMeetingStartTime());
-		registerMeetingEntity.setMeetingEndTime(meetingRoomRequestPojo.getMeetingEndTime());
-		registerMeetingEntity.setNoMembersAttending(meetingRoomRequestPojo.getNoMembersAttending());
-		registerMeetingEntity.setTtsId(meetingRoomRequestPojo.getTtsId());
-		registerMeetingEntity.setPurpose(meetingRoomRequestPojo.getPurpose());
-		registerMeetingEntity.setBusinessPartnerId(meetingRoomRequestPojo.getBusinessPartnerId());
-		registerMeetingEntity.setSlotId(meetingRoomRequestPojo.getSlotId());
-		meetingRoomDao.registerMeetingRoom(registerMeetingEntity);
+		for (RegisterMeetingEntity obj : date) {
+			Time stTm = obj.getMeetingStartTime();
+			Time enTime = obj.getMeetingEndTime();
+			System.out.println("CHECK" + stTm);
+			if (!stTm.before(startTime) && !stTm.equals(startTime)
+					|| !startTime.before(enTime) && !startTime.equals(endTime) && endTime.after(startTime)
+					|| date.isEmpty()) {
+				meetingRoomRequestPojo.setBookingStatus("Booked");
+				meetingRoomDao.registerMeetingRoom(meetingRoomRequestPojo);
+           
+			}
+		}
+		if (date.isEmpty()) {
+			meetingRoomRequestPojo.setBookingStatus("Booked");
+			meetingRoomRequestPojo.setDeleted(false);
+			meetingRoomDao.registerMeetingRoom(meetingRoomRequestPojo);
+		}
 	}
 
-	@Override
-	public List<Object> findByDate(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-		return meetingRoomDao.findByDate(meetingRoomRequestPojo);
-	}
+//	@Override
+//	public List<Object> findByDate(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+//		return meetingRoomDao.findByDate(meetingRoomRequestPojo);
+//	}
 
 	@Override
-	public void findByRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-		meetingRoomDao.findByRoomId(meetingRoomRequestPojo);
-		
+	public MeetingRoomsEntity findByRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		return meetingRoomDao.findByRoomId(meetingRoomRequestPojo);
+
 	}
 
 	@Override
 	public void updateNoOfMembers(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-	   meetingRoomDao.updateNoOfMembes(meetingRoomRequestPojo);	
+		meetingRoomDao.updateNoOfMembes(meetingRoomRequestPojo);
 	}
 
 	@Override
 	public void deleteById(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-	   meetingRoomDao.deleteById(meetingRoomRequestPojo);
+		meetingRoomDao.updateStatus(meetingRoomRequestPojo);
+		meetingRoomDao.deleteById(meetingRoomRequestPojo);
 	}
 
 	@Override
 	public List<RegisterMeetingEntity> findMeetingBookedRoom() {
 		return meetingRoomDao.findMeetingBookedRoom();
-		
+
 	}
 
 	@Override
@@ -102,6 +96,38 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 		return meetingRoomDao.findCancelMeeting(meetingRoomRequestPojo);
 	}
 
-    	
-	
+	@Override
+	public List<RegisterMeetingEntity> findByDateAndRoomId(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		return meetingRoomDao.findByDateAndRoomId(meetingRoomRequestPojo);
+
+	}
+
+	@Override
+	public List<RegisterMeetingEntity> findByTtsId(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		return meetingRoomDao.findByTtsId(meetingRoomRequestPojo);
+	}
+
+	@Override
+	public Object findAvailability(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		List<Object> obj = new ArrayList<>();
+		Time temp = null;
+		LocalTime startingTime = LocalTime.of(01, 00, 00);
+		LocalTime endingTime = LocalTime.of(23, 59, 59);
+		List<RegisterMeetingEntity> aObject = meetingRoomDao.findAvailability(meetingRoomRequestPojo);
+		for (RegisterMeetingEntity registerMeetingEntity : aObject) {
+			Time dbStarting = registerMeetingEntity.getMeetingStartTime();
+			Time dbEndingTime = registerMeetingEntity.getMeetingEndTime();
+			if (temp == null && !startingTime.equals(dbStarting)) {
+				obj.add("From: " + startingTime + " To: " + dbStarting + " Available ");
+			} else if (!temp.equals(dbStarting)) {
+				obj.add("From: " + temp + " TO: " + dbStarting + " Available ");
+			} else {
+				obj.add("From:" + dbEndingTime + " TO: " + endingTime + " Available ");
+			}
+			temp = dbEndingTime;
+		}
+		return obj;
+
+	}
+
 }

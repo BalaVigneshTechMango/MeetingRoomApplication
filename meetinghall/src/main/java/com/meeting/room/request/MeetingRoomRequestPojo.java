@@ -28,6 +28,15 @@ public class MeetingRoomRequestPojo {
 	private int businessPartnerId;
 	private Boolean deleted;
 	private String slotId;
+	private String bookingStatus;
+
+	public String getBookingStatus() {
+		return bookingStatus;
+	}
+
+	public void setBookingStatus(String bookingStatus) {
+		this.bookingStatus = bookingStatus;
+	}
 
 	public String getSlotId() {
 		return slotId;
