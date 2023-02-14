@@ -7,7 +7,7 @@ import com.meeting.room.request.MeetingRoomRequestPojo;
 
 public interface MeetingRoomService {
 
-	public void createRoom(MeetingRoomRequestPojo meetingRoomRequestPojo);
+	public void  createRoom(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 	public List<MeetingRoomsEntity> getRoomDetails();
 									
@@ -30,5 +30,7 @@ public interface MeetingRoomService {
 	public List<RegisterMeetingEntity> findByTtsId(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 	public Object findAvailability(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	public void rescheduleTime(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
 }

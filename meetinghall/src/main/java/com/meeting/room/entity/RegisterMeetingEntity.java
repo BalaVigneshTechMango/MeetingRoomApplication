@@ -43,9 +43,7 @@ public class RegisterMeetingEntity {
 	@Column(name = "business_partner_id")
 	private int businessPartnerId;
 	@Column(name = "deleted")
-	private Boolean deleted =Boolean.FALSE;
-	@Column(name = "slot_id")
-	private String slotId;
+	private Boolean deleted =Boolean.FALSE;	
 	@Column(name = "booking_status")
 	private String bookingStatus;
 	
@@ -58,13 +56,7 @@ public class RegisterMeetingEntity {
 		this.bookingStatus = bookingStatus;
 	}
 
-	public String getSlotId() {
-		return slotId;
-	}
-
-	public void setSlotId(String slotId) {
-		this.slotId = slotId;
-	}
+	
 
 	public int getAvailId() {
 		return availId;

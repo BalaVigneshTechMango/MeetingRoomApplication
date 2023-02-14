@@ -25,7 +25,7 @@ public class MeetingRoomsEntity {
 	@Column(name = "television")
 	private String television;
 	@Column(name = "web_camera")
-	private String webcamera;
+	private String webCamera;
 	@Column(name = "ac_availability")
 	private String acAvailability;
 	
@@ -51,9 +51,7 @@ public class MeetingRoomsEntity {
 	public String getTelevision() {
 		return television;
 	}
-	public String getWebcamera() {
-		return webcamera;
-	}
+	
 	public String getAcAvailability() {
 		return acAvailability;
 	}
@@ -80,11 +78,15 @@ public class MeetingRoomsEntity {
 	public void setTelevision(String television) {
 		this.television = television;
 	}
-	public void setWebcamera(String webcamera) {
-		this.webcamera = webcamera;
-	}
+
 	public void setAcAvailability(String acAvailability) {
 		this.acAvailability = acAvailability;
+	}
+	public String getWebCamera() {
+		return webCamera;
+	}
+	public void setWebCamera(String webCamera) {
+		this.webCamera = webCamera;
 	}
 	
 	

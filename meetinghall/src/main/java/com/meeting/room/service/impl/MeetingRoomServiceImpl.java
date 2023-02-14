@@ -1,5 +1,6 @@
 package com.meeting.room.service.impl;
 
+
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -23,13 +24,11 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 	@Autowired
 	private RegisterMeetingRepository registerMeetingRepository;
 
-
 	@Override
 	public void createRoom(MeetingRoomRequestPojo meetingRoomRequestPojo) {
 		String id = meetingRoomRepository.getRoomId(meetingRoomRequestPojo.getBlock());
 		meetingRoomRequestPojo.setRoomId(id);
-		 meetingRoomDao.createRoom(meetingRoomRequestPojo);
-		
+		meetingRoomDao.createRoom(meetingRoomRequestPojo);
 	}
 
 	@Override
@@ -43,7 +42,6 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 		Time endTime = meetingRoomRequestPojo.getMeetingEndTime();
 		List<RegisterMeetingEntity> date = registerMeetingRepository
 				.findByMeetingDate(meetingRoomRequestPojo.getMeetingDate());
-		
 		for (RegisterMeetingEntity obj : date) {
 			Time stTm = obj.getMeetingStartTime();
 			Time enTime = obj.getMeetingEndTime();
@@ -53,7 +51,7 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 					|| date.isEmpty()) {
 				meetingRoomRequestPojo.setBookingStatus("Booked");
 				meetingRoomDao.registerMeetingRoom(meetingRoomRequestPojo);
-           
+
 			}
 		}
 		if (date.isEmpty()) {
@@ -128,6 +126,29 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 		}
 		return obj;
 
+	}
+
+	@Override
+	public void rescheduleTime(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		Time startTime = meetingRoomRequestPojo.getMeetingStartTime();
+		Time endTime = meetingRoomRequestPojo.getMeetingEndTime();
+		List<RegisterMeetingEntity> date = registerMeetingRepository.findByMeetingDate(meetingRoomRequestPojo.getMeetingDate());
+		for (RegisterMeetingEntity obj : date) {
+			Time stTm = obj.getMeetingStartTime();
+			Time enTime = obj.getMeetingEndTime();
+			System.out.println("CHECK" + stTm);
+			if (!stTm.before(startTime) && !stTm.equals(startTime)
+					|| !startTime.before(enTime) && !startTime.equals(endTime) && endTime.after(startTime)
+					|| date.isEmpty()) {
+				meetingRoomRequestPojo.setBookingStatus("Booked");
+				meetingRoomDao.registerMeetingRoom(meetingRoomRequestPojo);
+				meetingRoomDao.deleteById(meetingRoomRequestPojo);
+				
+			}
+		}
+		
+	
+		
 	}
 
 }

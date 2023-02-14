@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.meeting.room.entity.RegisterMeetingEntity;
 import com.meeting.room.request.MeetingRoomRequestPojo;
 import com.meeting.room.response.MeetingRoomResponsePojo;
@@ -21,8 +20,10 @@ public class MeetingRoomController {
 	@PostMapping("/createRoom") // creating Meeting Room with details of facility
 	public MeetingRoomResponsePojo createRoom(@RequestBody MeetingRoomRequestPojo meetingRoomRequestPojo) {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
-		 meetingRoomService.createRoom(meetingRoomRequestPojo);
+		meetingRoomService.createRoom(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(meetingRoomRequestPojo);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -31,6 +32,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		Object response = meetingRoomService.getRoomDetails();
 		meetingRoomResponsePojo.setObject(response);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -39,6 +42,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		meetingRoomService.registerMeetingRoom(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(meetingRoomRequestPojo);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -55,6 +60,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		Object aObject = meetingRoomService.findByRoomId(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(aObject);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -63,6 +70,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		meetingRoomService.updateNoOfMembers(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(meetingRoomRequestPojo);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 
 	}
@@ -72,6 +81,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		meetingRoomService.deleteById(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(meetingRoomRequestPojo);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -80,6 +91,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		Object response = meetingRoomService.findMeetingBookedRoom();
 		meetingRoomResponsePojo.setObject(response);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 
 	}
@@ -95,6 +108,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		Object response = meetingRoomService.findByDateAndRoomId(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(response);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -103,6 +118,8 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		Object response = meetingRoomService.findByTtsId(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(response);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 	}
 
@@ -111,8 +128,19 @@ public class MeetingRoomController {
 		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
 		Object response = meetingRoomService.findAvailability(meetingRoomRequestPojo);
 		meetingRoomResponsePojo.setObject(response);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
 		return meetingRoomResponsePojo;
 
+	}
+	@PostMapping("/rescheduleTime")
+	public MeetingRoomResponsePojo rescheduleTime(@RequestBody MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		MeetingRoomResponsePojo meetingRoomResponsePojo = new MeetingRoomResponsePojo();
+		 meetingRoomService.rescheduleTime(meetingRoomRequestPojo);
+		//meetingRoomResponsePojo.setObject(response);
+		meetingRoomResponsePojo.setIstrue(true);
+		meetingRoomResponsePojo.setMessage("updated");
+		return meetingRoomResponsePojo;
 	}
 
 }

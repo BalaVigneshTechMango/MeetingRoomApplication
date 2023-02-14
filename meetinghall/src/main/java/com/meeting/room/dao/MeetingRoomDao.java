@@ -34,4 +34,8 @@ public interface MeetingRoomDao {
 
 	List<RegisterMeetingEntity> findAvailability(MeetingRoomRequestPojo meetingRoomRequestPojo);
 
+	void rescheduleTime(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
+	List<RegisterMeetingEntity> findRoomIdBySchedule(MeetingRoomRequestPojo meetingRoomRequestPojo);
+
 }

@@ -26,9 +26,10 @@ public class MeetingRoomDaoImpl implements MeetingRoomDao {
 
 	@Override
 	public List<MeetingRoomsEntity> getRoomDetails() {
-		return jdbcTemplate.query("SELECT * from meeting_room",
+		List<MeetingRoomsEntity> res = jdbcTemplate.query("SELECT * from meeting_room",
 				BeanPropertyRowMapper.newInstance(MeetingRoomsEntity.class));
-
+		return res;
+		
 	}
 
 	@Override
@@ -48,13 +49,12 @@ public class MeetingRoomDaoImpl implements MeetingRoomDao {
 	public void registerMeetingRoom(MeetingRoomRequestPojo meetingRoomRequestPojo) {
 		jdbcTemplate.update(
 				"INSERT INTO room_availability (room_id,meeting_date,meeting_start_time,meeting_end_time,no_members_attending,tts_id,"
-						+ "purpose,business_partner_id,deleted,slot_id,booking_status)VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+						+ "purpose,business_partner_id,deleted,booking_status)VALUES(?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { meetingRoomRequestPojo.getRoomId(), meetingRoomRequestPojo.getMeetingDate(),
 						meetingRoomRequestPojo.getMeetingStartTime(), meetingRoomRequestPojo.getMeetingEndTime(),
-						meetingRoomRequestPojo.getNoMembersAttending(), meetingRoomRequestPojo.getTtsId(),
+						meetingRoomRequestPojo.getNoMembersAttending(),meetingRoomRequestPojo.getTtsId(),
 						meetingRoomRequestPojo.getPurpose(), meetingRoomRequestPojo.getBusinessPartnerId(),
-						meetingRoomRequestPojo.getDeleted(), meetingRoomRequestPojo.getSlotId(),
-						meetingRoomRequestPojo.getBookingStatus() });
+						meetingRoomRequestPojo.getDeleted(), meetingRoomRequestPojo.getBookingStatus() });
 	}
 
 //	@Override
@@ -71,7 +71,7 @@ public class MeetingRoomDaoImpl implements MeetingRoomDao {
 
 	@Override
 	public void updateNoOfMembes(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-		jdbcTemplate.update("UPDATE room_availabilty SET no_members_attending=? where avail_id=?",
+		jdbcTemplate.update("UPDATE room_availability SET no_members_attending=? where avail_id=?",
 				new Object[] { meetingRoomRequestPojo.getNoMembersAttending(), meetingRoomRequestPojo.getAvailId() });
 	}
 
@@ -119,9 +119,25 @@ public class MeetingRoomDaoImpl implements MeetingRoomDao {
 
 	@Override
 	public List<RegisterMeetingEntity> findAvailability(MeetingRoomRequestPojo meetingRoomRequestPojo) {
-		return jdbcTemplate.query("SELECT * from room_availability where meeting_date=? AND room_id=? order by meeting_start_time asc"
-				,BeanPropertyRowMapper.newInstance(RegisterMeetingEntity.class),meetingRoomRequestPojo.getMeetingDate(),
+		return jdbcTemplate.query(
+				"SELECT * from room_availability where meeting_date=? AND room_id=? order by meeting_start_time asc",
+				BeanPropertyRowMapper.newInstance(RegisterMeetingEntity.class), meetingRoomRequestPojo.getMeetingDate(),
 				meetingRoomRequestPojo.getRoomId());
+	}
+
+	@Override
+	public void rescheduleTime(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		jdbcTemplate.update("UPDATE room_availability SET meeting_start_time=?, meeting_end_time=? where avail_id=? ",
+				new Object[] { meetingRoomRequestPojo.getMeetingStartTime(), meetingRoomRequestPojo.getMeetingEndTime(),
+						meetingRoomRequestPojo.getAvailId() });
+
+	}
+
+	@Override
+	public List<RegisterMeetingEntity> findRoomIdBySchedule(MeetingRoomRequestPojo meetingRoomRequestPojo) {
+		
+		return jdbcTemplate.query("SELECT * from room_availability where avail_id=?",
+				BeanPropertyRowMapper.newInstance(RegisterMeetingEntity.class),meetingRoomRequestPojo.getAvailId());
 	}
 
 }
